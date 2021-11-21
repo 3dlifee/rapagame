@@ -71,7 +71,7 @@ function ComponentDidMount1(props) {
   async function foundGameTableAccount() {
 
     if (input !== "") {
-      const MICROALGOS = '1000000';
+      const MICROALGOS = '10000000';
       const accAlice = await stdlib.getDefaultAccount();
 
       const accgameWallet = await stdlib.newAccountFromMnemonic(input);
@@ -85,7 +85,7 @@ function ComponentDidMount1(props) {
       setWalletG(gameWalletBalance);
       playerpaytoplay = true;
 
-      alert("Game Table Founded!");
+      alert("Game Table Funded!");
 
     } else {
 
