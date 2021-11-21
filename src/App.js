@@ -117,9 +117,11 @@ function ComponentDidMount1(props) {
       }, 100);
 
     } else {
-      console.log("add founds to play");
+      console.log("add funds to play");
+
       playerpaytoplay = false;
-      alert("Add Founds to Play!");
+      alert("Add Funds to Play!");
+
 
     }
 
