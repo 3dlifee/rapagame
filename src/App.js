@@ -336,7 +336,7 @@ function ComponentDidMount1(props) {
 
                 <div className="py-2">
                   <button type="button" onClick={() => foundGameTableAccount()} className="transition duration-500 ease-in-out justify-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-sm text-white transform hover:-translate-y-1 hover:scale-110 ...">
-                    Add Founds
+                    Add Funds
                   </button>
                 </div>
 
