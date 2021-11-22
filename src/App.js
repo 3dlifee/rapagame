@@ -1,16 +1,14 @@
-
-
 import rapalogo from "../src/imgs/rapalogo.png";
 import deixa from "../src/imgs/deixa.png";
 import poemimg from "../src/imgs/poem.png";
 import rapaimg from "../src/imgs/rapa.png";
 import tiraimg from "../src/imgs/tira.png";
 import rapas from "../src/imgs/rapas.jpg";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import * as backend from './build/index.main.mjs';
+import * as backend from "./build/index.main.mjs";
 import MyAlgoConnect from "@reach-sh/stdlib/ALGO_MyAlgoConnect";
-import { loadStdlib } from '@reach-sh/stdlib';
+import { loadStdlib } from "@reach-sh/stdlib";
 const stdlib = loadStdlib("ALGO");
 
 stdlib.setWalletFallback(
@@ -19,7 +17,6 @@ stdlib.setWalletFallback(
     MyAlgoConnect,
   })
 );
-
 
 var addr = "Hello";
 var addrGameWallet = "Hello";
@@ -34,44 +31,30 @@ var playerpaytoplay = false;
 var poem = 2;
 var tira = 0;
 var rapa = 0;
-var gameWalletBalance = '';
-var fmtGameWallet = '';
-var fmt = '';
-
-
+var gameWalletBalance = "";
+var fmtGameWallet = "";
+var fmt = "";
 
 function Rapa(props) {
-
   if (props.list === 0) {
-
     return <img src={poemimg} height={200} alt="Algorand Blockchain" />;
-
   } else if (props.list === 1) {
-
     return <img src={tiraimg} height={200} alt="Algorand Blockchain" />;
-
-  } if (props.list === 2) {
-
+  }
+  if (props.list === 2) {
     return <img src={rapaimg} height={200} alt="Algorand Blockchain" />;
-
-  } if (props.list === 3) {
-
+  }
+  if (props.list === 3) {
     return <img src={deixa} height={200} alt="Algorand Blockchain" />;
-
   } else {
-
     return <img src={rapas} height={200} alt="Algorand Blockchain" />;
   }
-
 }
 
-
 function ComponentDidMount1(props) {
-
   async function foundGameTableAccount() {
-
     if (input !== "") {
-      const MICROALGOS = '10000000';
+      const MICROALGOS = "10000000";
       const accAlice = await stdlib.getDefaultAccount();
 
       const accgameWallet = await stdlib.newAccountFromMnemonic(input);
@@ -84,29 +67,34 @@ function ComponentDidMount1(props) {
 
       setWalletG(gameWalletBalance);
       playerpaytoplay = true;
-
+      console.log(gameWalletBalance);
       alert("Game Table Funded!");
-
     } else {
-
       playerpaytoplay = false;
       alert("Mnemonic input is empty!");
-
     }
   }
 
   function rapaAnimation() {
-
     if (playerpaytoplay === true) {
+      (async () => {
+        const accgameWalletUpdate = await stdlib.newAccountFromMnemonic(input);
+        const balAtomicGameWalletUpdate = await stdlib.balanceOf(
+          accgameWalletUpdate
+        );
+        const gameWalletBalanceUpdate = stdlib.formatCurrency(
+          balAtomicGameWalletUpdate,
+          4
+        );
+        setWalletG(gameWalletBalanceUpdate);
+      })();
 
       setTimeout(getGameResult, 2000);
 
       let counter = 0;
       const interval = setInterval(() => {
-
         counter += 1;
-        if (counter >= 15)
-          clearInterval(interval);
+        if (counter >= 15) clearInterval(interval);
         roll = Math.floor(Math.random() * 4);
 
         setRapaValue(roll);
@@ -115,20 +103,15 @@ function ComponentDidMount1(props) {
 
         playerpaytoplay = false;
       }, 100);
-
     } else {
       console.log("add funds to play");
 
       playerpaytoplay = false;
       alert("Add Funds to Play!");
-
-
     }
-
   }
-  
-  function getGameResult() {
 
+  function getGameResult() {
     tira = Math.round(gameWalletBalance * 0.1);
     rapa = Math.round(gameWalletBalance * 0.8);
 
@@ -136,25 +119,20 @@ function ComponentDidMount1(props) {
     console.log("The value of tira is " + tira);
     console.log("The value of rapa is " + rapa);
 
-     hand = roll;
+    hand = roll;
 
     if (roll === 0) {
-
       WagerValue = poem;
       settableGameValue(WagerValue);
-
     } else if (roll === 1) {
       WagerValue = tira;
       settableGameValue(WagerValue);
-
     } else if (roll === 2) {
       WagerValue = rapa;
       settableGameValue(WagerValue);
-
     } else if (roll === 3) {
       WagerValue = 0;
       settableGameValue(WagerValue);
-
     } else {
       WagerValue = 0;
       settableGameValue(WagerValue);
@@ -166,11 +144,9 @@ function ComponentDidMount1(props) {
     console.log(playerpaytoplay);
 
     (async () => {
-
-
       const accAlice = await stdlib.getDefaultAccount();
       const accgameWallet = await stdlib.newAccountFromMnemonic(input);
-      
+
       addr = stdlib.formatAddress(accAlice.getAddress());
       addrGameWallet = stdlib.formatAddress(accgameWallet.getAddress());
       console.log(addr);
@@ -187,7 +163,8 @@ function ComponentDidMount1(props) {
       const getBalance = async (who) => fmt(await stdlib.balanceOf(who));
       console.log(getBalance);
 
-      const getBalanceGameWallet = async (who) => fmtGameWallet(await stdlib.balanceOf(who));
+      const getBalanceGameWallet = async (who) =>
+        fmtGameWallet(await stdlib.balanceOf(who));
       console.log(getBalanceGameWallet);
 
       const beforeAlice = await getBalance(accAlice);
@@ -201,216 +178,247 @@ function ComponentDidMount1(props) {
       const ctcGameWallet = accgameWallet.contract(backend, ctcAlice.getInfo());
       console.log(ctcGameWallet);
 
-
-      const HAND = ['Poem', 'Tira', 'Rapa', 'Deixa'];
-      const OUTCOME = ['Alice poem', 'Alice tira', 'Alice rapa', 'Alice deixa'];
+      const HAND = ["Poem", "Tira", "Rapa", "Deixa"];
+      const OUTCOME = ["Alice poem", "Alice tira", "Alice rapa", "Alice deixa"];
 
       const Player = (Who) => ({
-
         ...stdlib.hasRandom, // <--- new!
         getHand: () => {
-
           const hand = roll;
 
           console.log(`${Who} played ${HAND[hand]}`);
           setrapaRound(`${HAND[hand]}`);
           return hand;
-
         },
 
         seeOutcome: (outcome) => {
           console.log(`${Who} saw outcome ${OUTCOME[outcome]}`);
-
         },
       });
 
-
       await Promise.all([
-
         backend.Alice(ctcAlice, {
-          ...Player('Alice'),
+          ...Player("Alice"),
 
           wager: stdlib.parseCurrency(WagerValue),
-
         }),
 
         backend.GameWallet(ctcGameWallet, {
-          ...Player('GameWallet'),
+          ...Player("GameWallet"),
 
           acceptWager: (amt) => {
-            console.log(`Game Table accepts Alice play result of ${fmtGameWallet(amt)}.`);
+            console.log(
+              `Game Table accepts Alice play result of ${fmtGameWallet(amt)}.`
+            );
           },
-
         }),
-
       ]);
 
       const afterAlice = await getBalance(accAlice);
       const afterGameWallet = await getBalanceGameWallet(accgameWallet);
 
       console.log(`Alice went from ${beforeAlice} to ${afterAlice}.`);
-      console.log(`GameWallet went from ${beforeGameWallet} to ${afterGameWallet}.`);
+      console.log(
+        `GameWallet went from ${beforeGameWallet} to ${afterGameWallet}.`
+      );
+
+      (async () => {
+        const accgameWalletUpdate = await stdlib.newAccountFromMnemonic(input);
+        const balAtomicGameWalletUpdate = await stdlib.balanceOf(
+          accgameWalletUpdate
+        );
+        const gameWalletBalanceUpdate = stdlib.formatCurrency(
+          balAtomicGameWalletUpdate,
+          4
+        );
+
+        const accAliceUpdate = await stdlib.connectAccount({
+          addr: addr,
+        });
+
+        const balAtomicAliceWalletUpdate = await stdlib.balanceOf(
+          accAliceUpdate
+        );
+        const aliceBalanceUpdate = stdlib.formatCurrency(
+          balAtomicAliceWalletUpdate,
+          4
+        );
+
+        setWalletG(gameWalletBalanceUpdate);
+        setAliceplayer(aliceBalanceUpdate);
+      })();
       playerpaytoplay = false;
-      setWalletG(gameWalletBalance);
-      setAliceplayer(fmt);
-      
-
     })(); // <-- Don't forget these!
+  } //comound2
 
-  }//comound2
+  const [Aliceplayer, setAliceplayer] = useState("");
+  useEffect(() => {}, [Aliceplayer]);
 
-  const [Aliceplayer, setAliceplayer] = useState('');
+  const [alicePublicKey, setalicePublicKey] = useState("");
+
+  useEffect(() => {}, [alicePublicKey]);
+
+  const [walletG, setWalletG] = useState("");
   useEffect(() => {
-
-  }, [Aliceplayer]);
-
-  const [alicePublicKey, setalicePublicKey] = useState('');
-  useEffect(() => {
-
-  }, [alicePublicKey]);
-
-  const [walletG, setWalletG] = useState('');
-  useEffect(() => {
-
+    gameWalletBalance = walletG;
   }, [walletG]);
 
-  const [rapalist, setRapaValue] = useState();
+  const [rapalist, setRapaValue] = useState("");
 
-  useEffect(() => {
+  useEffect(() => {}, [rapalist]);
 
+  const [rapaRound, setrapaRound] = useState("");
 
-  }, [rapalist]);
+  useEffect(() => {}, [rapaRound]);
 
-  const [rapaRound, setrapaRound] = useState();
+  const [tablegamevalue, settableGameValue] = useState("");
 
-  useEffect(() => {
+  useEffect(() => {}, [tablegamevalue]);
 
-
-  }, [rapaRound]);
-
-  const [tablegamevalue, settableGameValue] = useState();
-
-  useEffect(() => {
-
-
-  }, [tablegamevalue]);
-
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
 
   return (
     <>
-      <div >
-    
+      <div>
         <div className=" App container mx-auto mt-3 mb-8 font-thin">
-
-          <img className="w-1920 h-800 md:w-1920 md:h-auto md:rounded-none rounded-full mx-auto" src={rapalogo} height={200} alt="Algorand Blockchain" />
+          <img
+            className="w-1920 h-800 md:w-1920 md:h-auto md:rounded-none rounded-full mx-auto"
+            src={rapalogo}
+            height={200}
+            alt="Algorand Blockchain"
+          />
 
           <div className="flex justify-center mt-6 ">
             <Rapa list={rapalist} />
-
           </div>
           <div className="App container mx-auto mt-8 mb-8 font-thin">
-
             <ul className="grid grid-cols-1 gap-4 h-24">
               <li>
                 <div className="flex justify-center shadow bg-white rounded-lg whitespace-nowrap px-2 py-1 ml-1 h-full ">
-                  <button type="button" onClick={() => rapaAnimation()} className="transition duration-500 ease-in-out justify-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-sm text-white transform hover:-translate-y-1 hover:scale-110 ...">
+                  <button
+                    type="button"
+                    onClick={() => rapaAnimation()}
+                    className="transition duration-500 ease-in-out justify-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-sm text-white transform hover:-translate-y-1 hover:scale-110 ..."
+                  >
                     Play RAPA
                   </button>
-
                 </div>
               </li>
             </ul>
-
           </div>
           <ul className="grid grid-cols-2 gap-4 h-48">
             <li>
               <div className="shadow bg-white rounded-lg whitespace-nowrap px-2 py-1 ml-1 h-full ">
-
-
-                <div className="font-light text-4xl align-middle mb-2">Please Specify Mnemonic as Table Game</div>
+                <div className="font-light text-4xl align-middle mb-2">
+                  Please Specify Mnemonic as Table Game
+                </div>
                 <div className="py-5">
-                  <input value={input} onInput={e => setInput(e.target.value)} className=" focus:border-normal-blue-700 focus:ring-2 focus:ring-light-blue-700 focus:outline-none w-full text-sm text-black placeholder-gray-500 border border-gray-400 rounded-md py-2 pl-10" type="password" aria-label="Filter projects" placeholder="Insert Mnemonic as Table Game " />
+                  <input
+                    value={input}
+                    onInput={(e) => setInput(e.target.value)}
+                    className=" focus:border-normal-blue-700 focus:ring-2 focus:ring-light-blue-700 focus:outline-none w-full text-sm text-black placeholder-gray-500 border border-gray-400 rounded-md py-2 pl-10"
+                    type="password"
+                    aria-label="Filter projects"
+                    placeholder="Insert Mnemonic as Table Game "
+                  />
                 </div>
 
-                <div className="font-light text-xl align-middle mb-2">Add 10 Algos on the Game Table to play</div>
-
+                <div className="font-light text-xl align-middle mb-2">
+                  Add 10 Algos on the Game Table to play
+                </div>
 
                 <div className="py-2">
-                  <button type="button" onClick={() => foundGameTableAccount()} className="transition duration-500 ease-in-out justify-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-sm text-white transform hover:-translate-y-1 hover:scale-110 ...">
+                  <button
+                    type="button"
+                    onClick={() => foundGameTableAccount()}
+                    className="transition duration-500 ease-in-out justify-center px-4 py-2 bg-blue-400 hover:bg-blue-600 text-sm text-white transform hover:-translate-y-1 hover:scale-110 ..."
+                  >
                     Add Funds
                   </button>
                 </div>
-
-
               </div>
             </li>
             <li>
               <div className="shadow bg-white rounded-lg whitespace-nowrap px-2 py-1 ml-1 h-full">
-
-                <div className="font-light text-4xl align-middle mb-2">Game Status</div>
-
-                <div className="ring-blue-500 ring-4 text-center rounded-md p-2 my-4">Result from game round: {tablegamevalue} Algos</div>
-                <div className="ring-blue-500 ring-4 text-center rounded-md p-2 my-4">Total Amount in Game Table: {walletG} Algos</div>
-                <div className="text-left">
-                  <div className="font-light text-1xl align-middle mb-2">Player Result</div>
-                  <div className="ring-blue-500 ring-4 text-center rounded-md p-2 my-4">Total Amount in Player Wallet:{Aliceplayer} Algos</div>
-
+                <div className="font-light text-4xl align-middle mb-2">
+                  Game Status
                 </div>
 
+                <div className="ring-blue-500 ring-4 text-center rounded-md p-2 my-4">
+                  Result from game round: {tablegamevalue} Algos
+                </div>
+                <div className="ring-blue-500 ring-4 text-center rounded-md p-2 my-4">
+                  Total Amount in Game Table: {walletG} Algos
+                </div>
+                <div className="text-left">
+                  <div className="font-light text-1xl align-middle mb-2">
+                    Player Result
+                  </div>
+                  <div className="ring-blue-500 ring-4 text-center rounded-md p-2 my-4">
+                    Total Amount in Player Wallet:{Aliceplayer} Algos
+                  </div>
+                </div>
               </div>
             </li>
             <li>
               <div className="shadow bg-white rounded-lg whitespace-nowrap px-2 py-1 ml-1 h-full">
-                <div className="text-xl font-semibold font-mono whitespace-nowrap px-1 py-1 ml-1 rounded text-white bg-red-700 rounded-2">Game Rules</div>
+                <div className="text-xl font-semibold font-mono whitespace-nowrap px-1 py-1 ml-1 rounded text-white bg-red-700 rounded-2">
+                  Game Rules
+                </div>
 
                 <ul className="list-inside list-disc">
                   <li>Each player add 10 algo to the Game Wallet</li>
-                  <li>When Get <span className="font-bold">P</span> the player Add 2 algo on the Game Wallet</li>
-                  <li>When Get <span className="font-bold">T</span> the player Take 10% algo from the Game Wallet</li>
-                  <li>When Get <span className="font-bold">R</span> the player Take 80% algo from the Game Wallet</li>
-                  <li>When Get <span className="font-bold">D</span> pass your turn to the next Player</li>
-
+                  <li>
+                    When Get <span className="font-bold">P</span> the player Add
+                    2 algo on the Game Wallet
+                  </li>
+                  <li>
+                    When Get <span className="font-bold">T</span> the player
+                    Take 10% algo from the Game Wallet
+                  </li>
+                  <li>
+                    When Get <span className="font-bold">R</span> the player
+                    Take 80% algo from the Game Wallet
+                  </li>
+                  <li>
+                    When Get <span className="font-bold">D</span> pass your turn
+                    to the next Player
+                  </li>
                 </ul>
-
               </div>
             </li>
             <li>
               <div className="shadow bg-white rounded-lg whitespace-nowrap px-2 py-1 ml-1 h-full">
-                <div className="font-light text-xl align-middle mb-2">Other Info</div>
+                <div className="font-light text-xl align-middle mb-2">
+                  Other Info
+                </div>
 
-
-                <h1> Player in game: <span className="font-bold">{alicePublicKey}</span> </h1>
-                <h1>Player played <span className="font-bold">{rapaRound}</span></h1>
-
+                <h1>
+                  {" "}
+                  Player in game:{" "}
+                  <span className="font-bold">{alicePublicKey}</span>{" "}
+                </h1>
+                <h1>
+                  Player played <span className="font-bold">{rapaRound}</span>
+                </h1>
               </div>
             </li>
             <li>
               <div className="col-span-1 bg-white rounded-lg whitespace-nowrap px-2 py-1 ml-1 mt-4 mb-8 h-full">
                 <p className="text-md leading-tight">Mario Fernandes 2021 </p>
-
               </div>
-
             </li>
-
           </ul>
-
         </div>
-
       </div>
     </>
   );
-
 }
-
 
 function App() {
   return (
     <div className="App">
       <ComponentDidMount1 />
-
-
-
     </div>
   );
 }
