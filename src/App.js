@@ -194,6 +194,10 @@ function ComponentDidMount1(props) {
         seeOutcome: (outcome) => {
           console.log(`${Who} saw outcome ${OUTCOME[outcome]}`);
         },
+         informTimeout: () => {
+          console.log(`${Who} observed a timeout`);
+          }, 
+       
       });
 
       await Promise.all([
@@ -201,6 +205,7 @@ function ComponentDidMount1(props) {
           ...Player("Alice"),
 
           wager: stdlib.parseCurrency(WagerValue),
+          deadline: 10,
         }),
 
         backend.GameWallet(ctcGameWallet, {
